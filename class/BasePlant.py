@@ -1,5 +1,35 @@
-from abc import ABC, abstractmethod
-# this class is technically abstract
-class BasePlant(ABC):
+class BasePlant():
+    def __init__(self, max_kwh: int, min_operative_kwh: int, 
+    price: int, maintain_cost: int, ramp_rate: float, capacity_used: float
+    ):
+
+        if(min_operative_kwh > max_kwh):
+            min_operative_kwh = max_kwh + min_operative_kwh
+            max_kwh = min_operative_kwh - max_kwh
+            min_operative_kwh = min_operative_kwh - max_kwh
+
+        if(max_kwh < 1):
+            max_kwh = 1e3
+        
+        if(min_operative_kwh < 1):
+            min_operative_kwh = max_kwh * 0.15
+        
+        if(price < 1):
+            price = 1e4
+
+        if(maintain_cost < 1):
+            maintain_cost = price * 0.005
+
+
+        if(ramp_rate < 1):
+            ramp_rate = 1 # i do not how to use this variable yet so, that's it
+
+        if(capacity_used < 0):
+            capacity_used = 0 # this variable represents a percentage
+        self.max_kwh = max_kwh
+        self.min_operative_kwh = min_operative_kwh
+        self.price = price
+        self.maintain_cost = maintain_cost
+
     pass
 
