@@ -1,7 +1,9 @@
 class BasePlant():
+    plant_id = 0
+    
     def __init__(self, max_kwh: int, min_operative_kwh: int, 
-    price: int, maintain_cost: int, ramp_rate: float, capacity_used: float
-    ):
+    price: int, maintain_cost: int, ramp_rate: float, capacity_used: float,
+    plant_type: int):
 
         if(min_operative_kwh > max_kwh):
             min_operative_kwh = max_kwh + min_operative_kwh
@@ -27,9 +29,14 @@ class BasePlant():
         if(capacity_used < 0):
             capacity_used = 0 # this variable represents a percentage
         
+
         # this class does not do anything i think
         self.max_kwh = max_kwh
         self.min_operative_kwh = min_operative_kwh
         self.price = price
         self.maintain_cost = maintain_cost
-
+        self.plant_type = plant_type
+        self.plant_id = BasePlant.plant_id
+        
+        # each time that a new plant is created then increment the id
+        BasePlant.plant_id += 1 
