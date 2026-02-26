@@ -12,13 +12,18 @@ class BasePlant():
         # param assignement
         min_operative_kwh = properties.get("MIN_OPERATIVE_KWH", 1)
         max_kwh = properties.get("MAX_KWH", 100)
+        price = properties.get("PRICE")
+        maintain_cost = properties.get("MAINTAIN_COST")
+        ramp_rate = properties.get("RAMP_RATE")
+        kwh_used = 0
+
+        if(max_kwh < 1):
+            max_kwh = 1e3
+
         if(min_operative_kwh > max_kwh):
             min_operative_kwh = max_kwh + min_operative_kwh
             max_kwh = min_operative_kwh - max_kwh
             min_operative_kwh = min_operative_kwh - max_kwh
-
-        if(max_kwh < 1):
-            max_kwh = 1e3
         
         if(min_operative_kwh < 1):
             min_operative_kwh = max_kwh * 0.15
@@ -42,8 +47,10 @@ class BasePlant():
         self.min_operative_kwh = min_operative_kwh
         self.price = price
         self.maintain_cost = maintain_cost
-        self.plant_type = plant_type
-        self.plant_id = BasePlant.plant_id
+        self.type = plant_type
+        self.id = BasePlant.plant_id
         
         # each time that a new plant is created then increment the id
         BasePlant.plant_id += 1 
+
+        print(f"Info: the plant of type {self.type} with id {self.id} has been created")
