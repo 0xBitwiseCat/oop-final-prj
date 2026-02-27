@@ -7,6 +7,8 @@ from enum import Enum
 
 ## ! it is necessary to add logic that describes when the plant needs maintainement
 
+## ramp_rate means how many steps are needed to make 
+## a change in the current capacity used by the plant
 class CoalPlantParams(Enum):
     PRICE = 1e6
     MAX_KWH = 100e3
