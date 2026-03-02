@@ -1,3 +1,4 @@
+from User import User
 from PlantParams import (
     CoalPlantParams, GasTurbineParams, SolarFarmParams,
     HydroPlantParams, WindTurbineParams, NuclearPlantParams
@@ -21,8 +22,11 @@ class Store:
         NuclearPlantParams: NuclearPlant
     }
 
-    @staticmethod
+    PLANT_PRICES = {
+        "COAL": 560_000
+    }
 
+    @staticmethod
     def show_available_plants():
         for pl in Store.available_plants:
             print(f"id({pl.id}) - {pl.type}: price: ${pl.price}") 
@@ -50,8 +54,16 @@ class Store:
         
         print(f"Tienda: Se han generado {cantidad} nuevas plantas.")
 
-    def sell_plant():
+    @staticmethod
+    def sell_plant(user: User, plant_id):
+        for pl in user.plants:
+            if pl.id == plant_id:
+                print(f"Info: {pl.type} plant with id {pl.id} will be sold at ${Store.PLANT_PRICES[pl.type]}")
+                user.plants = [item for item in user.plants if item.id != plant_id]
+                user.balance += Store.PLANT_PRICES[pl.type]
+
         # user wants to sell one of their plants
+
         pass
 
     def buy_plant():

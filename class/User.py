@@ -1,7 +1,7 @@
 # controls user's balance, plants and user's response when demand changes
 class User:
     def __init__(self):
-        self.balance = 1e3
+        self.balance = 1_000_000
         self.plants = []
         self.current_power = 0 # there is no plants yet 
         self.max_power = 0 # there is no max kwh because there is no plants yet
@@ -25,7 +25,7 @@ class User:
         else:
             if capacity > pl.max_kwh:
                 pl.kwh_used = pl.max_kwh
-            else if capacity < 0:
+            elif capacity < 0:
                 pl.kwh_used = pl.min_operative_kwh
             else:
                 pl.kwh_used = capacity
