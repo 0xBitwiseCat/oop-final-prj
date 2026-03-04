@@ -55,6 +55,8 @@ class BasePlant():
         self.maintain_days_ratio = maintain_days_ratio
         self.kwh_used = kwh_used
         self.changing_steps = 0
+        self.max_kwh_by_weather = 0
+        
         # each time that a new plant is created then increment the id
         BasePlant.plant_id += 1 
 
