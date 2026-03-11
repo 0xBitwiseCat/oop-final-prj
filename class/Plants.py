@@ -20,7 +20,14 @@ class HydroPlant(BasePlant):
     pass
 
 class WindTurbine(BasePlant):
-    pass
+    def allow_operation(self, weather):
+        if weather != "WINDY" and weather != "SUNNY" and weather != "CLOUDY":
+            print(f"Warning: Plant with id {self.id} can't operate on this weather, shutting down...")
+            self.kwh_used = 0
+            self.kwh_used_before_shutting_down = 0 
+            self.is_operative = False
+        else:
+            print(f"Info: Plant with id {self.id} is operative for today!")
 
 class NuclearPlant(BasePlant):
     pass
