@@ -1,4 +1,5 @@
 from enum import Enum
+
 class BasePlant():
     plant_id = 0
     # I think it's a better option to initialize using Params Classes but anyways
@@ -56,6 +57,7 @@ class BasePlant():
         self.kwh_used = kwh_used
         self.changing_steps = 0
         self.max_kwh_by_weather = 0
+        self.is_operative = True # allow to restrict operation if something happens
         
         # each time that a new plant is created then increment the id
         BasePlant.plant_id += 1 
@@ -114,7 +116,8 @@ class BasePlant():
         print(f"{s}{t}")
         self.kwh_used += self.changing_steps
 
-
+    def allow_operation(self, weather):
+        pass
 
     def __str__(self):
         head = f"Plant: (type: {self.type}, id: {self.id}, price: {self.price}, kwh used: {self.kwh_used})\n"

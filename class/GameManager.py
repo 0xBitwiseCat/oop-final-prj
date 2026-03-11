@@ -88,6 +88,9 @@ class GameManager:
         print(f"Info: Current demand: {self.current_demand} kwh ({self.step}/24)")
         print(f"Info: Current supply offered: {self.user.current_power} kwh")
     
+    def start_day(self):
+        for pl in self.user.plants:
+            pl.allow_operation(self.current_weather)
     def finish_day(self):
         print(f"Info: Finish day!")
 
