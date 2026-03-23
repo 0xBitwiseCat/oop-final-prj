@@ -1,5 +1,7 @@
 import math
 from User import User
+from Store import Store
+
 from PlantParams import (
     CoalPlantParams, GasTurbineParams, SolarFarmParams,
     HydroPlantParams, WindTurbineParams, NuclearPlantParams
@@ -40,7 +42,8 @@ class GameManager:
             if StartBalance[difficulty]:
                 print(f"Info: Setting difficulty to {difficulty}")
                 self.difficulty = difficulty
-                self.user = User(StartBalance[difficulty])
+                sb = StartBalance[difficulty].value + 0.0
+                self.user = User(sb)
             else:
                 print(f"Warning: Selected difficulty does not exist, setting to NORMAL")
                 self.difficulty = "NORMAL"
@@ -52,6 +55,8 @@ class GameManager:
             self.current_weather = WeatherType.SUNNY
             self.unstable_steps = 0
             self.initialized = True
+            self.max_day_demand = 0
+            self.current_demand = 0
 
             self.base_max_kwh = 75_000 * (multiplier/5)  # Demanda máxima inicial depende de la dificultad
             self.growth_rate = 0.08 * multiplier   # Sube un 8% * pos_dificultad cada vez
@@ -85,12 +90,20 @@ class GameManager:
         return self.current_demand
 
     def info_step(self):
+        print(f"*****************************************************************")
         print(f"Info: Current demand: {self.current_demand} kwh ({self.step}/24)")
         print(f"Info: Current supply offered: {self.user.current_power} kwh")
+        print(f"*****************************************************************")
     
     def start_day(self):
+        Store.generate_plants()
+        self.info_step()
+        self.update_demand()
+        self.max_day_demand = self.get_daily_max()
+
         for pl in self.user.plants:
             pl.allow_operation(self.current_weather)
+
     def finish_day(self):
         print(f"Info: Finish day!")
 
@@ -99,10 +112,30 @@ class GameManager:
         self.step = self.step + 1
         self.info_step()
         if self.step >= 24:
+            self.finish_day()
             self.step = 0
             self.day += 1
+
+        if abs(self.user.current_power - self.current_demand) > 10:
+            print(f"Warning: The system is unbalanced. Adjust your kwh offer before {2-self.unstable_steps} steps")
+            self.unstable_steps += 1
+
+        if self.unstable_steps >= 3:
+            print(f"System was not balanced...")
+            self.step = 0
+            self.day = 1
+            self.current_weather = WeatherType.SUNNY
+            self.unstable_steps = 0
+            del self.user
+            print("Game over")
+            return False
+
+        if abs(self.current_demand - self.max_day_demand) > 10:
+            self.update_demand()
+        
     
     def user_action(self):
+        self.start_day()
         while(True):
             print(f"User: ${self.user.balance}, {len(self.user.plants)} plants, {self.user.max_power} kwh (max)")
             print(f"What do you want to do?")
@@ -111,6 +144,19 @@ class GameManager:
             print(f"2. Sell plants")
             print(f"3. Change kwh of a plant")
             print(f"4. Skip for now")
+
+            op = print('Enter your option [1-4]:')
+            op = int(input())
+            if op not in [1,2,3,4]:
+                print("Warning: Invalid option, skipping your turn...")
+
+            if op == 1:
+                Store.show_available_plants()
+                print("What plant do you want to buy? [type the id]:")
+                id_plant_to_buy = int(input())
+                Store.buy_plant(self.user, id_plant_to_buy)
+            if self.next_step() == False:
+                break
     
     def new_weather(self):
         self.current_weather = random.choice(list(WeatherType))
