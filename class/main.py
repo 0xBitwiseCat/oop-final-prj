@@ -45,7 +45,9 @@ while(True):
         difficulty = 2
     
     game_manager = GameManager(difficulties[difficulty-1], difficulty)
-    game_manager.update_demand()
-    game_manager.info_step()
+    continue_game = game_manager.user_action()
+
+    if not continue_game:
+        break
 
 
