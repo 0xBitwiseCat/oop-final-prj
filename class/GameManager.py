@@ -145,16 +145,34 @@ class GameManager:
             print(f"3. Change kwh of a plant")
             print(f"4. Skip for now")
 
-            op = print('Enter your option [1-4]:')
+            op = print('Enter your option [1-4]: ')
             op = int(input())
             if op not in [1,2,3,4]:
                 print("Warning: Invalid option, skipping your turn...")
 
+            # user selects buy plants
             if op == 1:
                 Store.show_available_plants()
-                print("What plant do you want to buy? [type the id]:")
+                print("What plant do you want to buy? [type the id]: ")
                 id_plant_to_buy = int(input())
                 Store.buy_plant(self.user, id_plant_to_buy)
+
+            # user selects sell plants
+            if op == 2:
+                self.user.show_plants()
+                print("What plant do you want to sell? [type the id]: ")
+                id_plant_to_sell = int(input())
+                Store.sell_plant(self.user, id_plant_to_sell)
+
+            # user selects change kwh
+            if op == 3:
+                self.user.show_plants()
+                print("What plant do you want to modify? [type the id]: ")
+                id_plant_to_change = int(input())
+                print("Type the new capacity for this plant: ")
+                new_capacity = int(input())
+                self.user.change_used_plant_capacity(id_plant_to_change, new_capacity):
+
             if self.next_step() == False:
                 break
     
