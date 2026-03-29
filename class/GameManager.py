@@ -146,7 +146,11 @@ class GameManager:
             print(f"4. Skip for now")
 
             op = print('Enter your option [1-4]: ')
-            op = int(input())
+            try:
+                op = int(input())
+            except ValueError:
+                print("Invalid input! Skipping turn...")
+            
             if op not in [1,2,3,4]:
                 print("Warning: Invalid option, skipping your turn...")
 
@@ -172,6 +176,10 @@ class GameManager:
                 print("Type the new capacity for this plant: ")
                 new_capacity = int(input())
                 self.user.change_used_plant_capacity(id_plant_to_change, new_capacity):
+
+            # skip actions
+            if op == 4:
+                print("User does not want to do anything, skip for now...")
 
             if self.next_step() == False:
                 break
